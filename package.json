@@ -1,0 +1,24 @@
+{
+  "name": "bakhresawebapp",
+  "version": "1.0.0",
+  "description": "Bakhresa SA PTY (LTD) vehicle logger",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": {
+    "name": "Sudarshan Ravichandran Vittal",
+    "email": "sudarshan@bakhresa.com"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "express": "^4.17.3",
+    "express-handlebars": "^6.0.5",
+    "express-session": "^1.17.2",
+    "sqlite": "^4.0.25",
+    "sqlite3": "^5.0.4"
+  }
+}
