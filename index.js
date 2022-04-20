@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
+const path = require('path');
 
 const app = express();
 
@@ -16,14 +17,36 @@ app.engine('handlebars', hbs.engine);
 
 app.set('view engine', 'handlebars');
 
-//app.use(express.static('public'));
-app.use('public', express.static(__dirname + './public'));
+app.use('/public', express.static(path.join(__dirname,'./public')));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 } }))
 
+// open({
+//     filename: './log_database.db',
+//     driver: sqlite3.Database
+// }).then(async function (db) {
+
+//     // run migrations
+
+//     // await db.migrate();
+
+//     // only setup the routes once the database connection has been established
+
+    app.get('/', function (req, res) {
+        res.render('login', {
+            title: 'Login',
+            layouts: 'main',
+        });        
+    });
+
+    app.post('/login', async function (req, res) {
+     
+      
+    });
+// })
 
 const PORT = process.env.PORT || 3011;
 

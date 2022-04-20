@@ -20,5 +20,8 @@
     "express-session": "^1.17.2",
     "sqlite": "^4.0.25",
     "sqlite3": "^5.0.4"
+  },
+  "nodemonConfig": {
+    "ext": "js,handlebars,css"
   }
 }
