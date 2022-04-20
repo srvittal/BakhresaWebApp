@@ -1,0 +1,6 @@
+CREATE TABLE vehicle_admission (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+    DateEntry TEXT NOT NULL,
+	TimeEntry TEXT NOT NULL,
+	VehicleReg TEXT NOT NULL,
+);
