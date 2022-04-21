@@ -1,0 +1,15 @@
+<form action="/admission" method="post">
+    <div class="col align-self-start">
+        <b>{{date}}</b>
+    </div>
+    <div class="col align-self-start">
+        <b>{{time}}</b>
+    </div>
+    <div class="col-6 mb-3 mx-auto">
+        <input type="text" class="form-control text-center" name="vehicleReg" value="{{reg}}"
+            placeholder="Vehicle Registration">
+    </div>
+    <div class="text-center">
+        <button class="btn btn-primary" name="vehRegAdd" value="Add" on type="submit">Submit</button>
+    </div>
+</form>
