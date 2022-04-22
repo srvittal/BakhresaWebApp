@@ -63,7 +63,7 @@ app.post('/', async function (req, res) {
 
     if (username == req.body.username && password == req.body.password) {
         req.session.loginMessage = "Logged In";
-        res.redirect('/add');
+        res.redirect('/group');
     } else {
         req.session.loginMessage = "Incorrect Username or Password";
         res.redirect('/');
@@ -93,31 +93,23 @@ app.post('/group', function (req, res) {
 
 app.get('/add/:group', function (req, res) {
     let name = "";
-    let d = moment().format("DD-MMM-YYYY");
-    let t = moment().format("hh:mm:ss A");
     if (req.params.group == "visitor") {
-        name = "Visitor"
-        res.render('vehicleAdd', {
+        name = "Visitor Addmission"
+        res.render('visitor', {
             title: name,
             layouts: 'main',
-            date: d,
-            time: t
         });
     } else if (req.params.group == "employee") {
-        name = "employee"
+        name = "Employee Addmission"
         res.render('employee', {
             title: name,
             layouts: 'main',
-            date: d,
-            time: t
         });
     } else if (req.params.group == "transporter") {
-        name = "transporter"
+        name = "Transporter Addmission"
         res.render('transport', {
             title: name,
             layouts: 'main',
-            date: d,
-            time: t
         });
     }
 });
