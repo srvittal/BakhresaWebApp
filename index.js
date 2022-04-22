@@ -18,7 +18,7 @@ app.engine('handlebars', hbs.engine);
 
 app.set('view engine', 'handlebars');
 
-app.use('/public', express.static(path.join(__dirname,'./public')));
+app.use('/public', express.static(path.join(__dirname, './public')));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -36,56 +36,91 @@ app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 } }))
 
 //     // only setup the routes once the database connection has been established
 
-    app.get('/', function (req, res) {
-        // res.render('login', {
-        //     title: 'Login',
-        //     layouts: 'main',
-        // });     
-        res.redirect('/add');   
-    });
+app.get('/', function (req, res) {
+    // res.render('login', {
+    //     title: 'BSA Login',
+    //     layouts: 'main',
+    // });     
+    res.redirect('/group');
+});
 
-    app.post('/', async function (req, res) {
-        let username = 'suda';
-        let password = 'test';
+app.post('/', async function (req, res) {
+    let username = 'suda';
+    let password = 'test';
 
-        // await db.all('SELECT * FROM customer_login WHERE Username = ? AND Pwd = ?', req.body.username, req.body.password)
-        //     .then(function (customer_login) {
-        //         if (customer_login.length != 0) {
-        //             username = customer_login[0].Username;
-        //             password = customer_login[0].Pwd;
-        //             req.session.Name = customer_login[0].Firstname + " " + customer_login[0].Lastname;
-        //             req.session.userName = username;
-        //         } else {
-        //             username = ' ';
-        //             password = ' ';
-        //         }
-        //     });
+    // await db.all('SELECT * FROM customer_login WHERE Username = ? AND Pwd = ?', req.body.username, req.body.password)
+    //     .then(function (customer_login) {
+    //         if (customer_login.length != 0) {
+    //             username = customer_login[0].Username;
+    //             password = customer_login[0].Pwd;
+    //             req.session.Name = customer_login[0].Firstname + " " + customer_login[0].Lastname;
+    //             req.session.userName = username;
+    //         } else {
+    //             username = ' ';
+    //             password = ' ';
+    //         }
+    //     });
 
-        if (username == req.body.username && password == req.body.password) {
-            req.session.loginMessage = "Logged In";
-            res.redirect('/add');
-        } else {
-            req.session.loginMessage = "Incorrect Username or Password";
-            res.redirect('/');
-        }
-
-
-    });
-
-    function getTime(){
-        moment().format("hh:mm:ss A");
+    if (username == req.body.username && password == req.body.password) {
+        req.session.loginMessage = "Logged In";
+        res.redirect('/add');
+    } else {
+        req.session.loginMessage = "Incorrect Username or Password";
+        res.redirect('/');
     }
 
-    app.get('/add', function (req, res) {
-        let d = moment().format("DD-MMM-YYYY");
-        let t = getTime();
+
+});
+
+app.get('/group', function (req, res) {
+    res.render('group', {
+        title: 'BSA Group'
+    })
+})
+
+app.post('/group', function (req, res) {
+    if (req.body.group == "employee") {
+        console.log("Employee")
+        res.redirect("/add/employee")
+    } else if (req.body.group == "visitor") {
+        console.log("Visitor")
+        res.redirect("/add/visitor")
+    } else if (req.body.group == "transporter") {
+        console.log("Transporter")
+        res.redirect("/add/transporter")
+    }
+})
+
+app.get('/add/:group', function (req, res) {
+    let name = "";
+    let d = moment().format("DD-MMM-YYYY");
+    let t = moment().format("hh:mm:ss A");
+    if (req.params.group == "visitor") {
+        name = "Visitor"
         res.render('vehicleAdd', {
-            title: 'Addmission',
+            title: name,
             layouts: 'main',
             date: d,
             time: t
-        });        
-    });
+        });
+    } else if (req.params.group == "employee") {
+        name = "employee"
+        res.render('employee', {
+            title: name,
+            layouts: 'main',
+            date: d,
+            time: t
+        });
+    } else if (req.params.group == "transporter") {
+        name = "transporter"
+        res.render('transport', {
+            title: name,
+            layouts: 'main',
+            date: d,
+            time: t
+        });
+    }
+});
 // })
 
 const PORT = process.env.PORT || 3011;
