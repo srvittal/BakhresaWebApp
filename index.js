@@ -101,9 +101,24 @@ app.get('/add/:group', function (req, res) {
         });
     } else if (req.params.group == "employee") {
         name = "Employee Addmission"
+        let aArr = ["Amelia", "Alfie", "Ava", "Archie", "Alexander", "Alice", "Amy", "Aaron"];
+        let bArr = ["Brooke", "Bobby", "Bella", "Ben", "Bethany", "Blake", "Beatrice", "Baby"];
+        let cArr = ["Charlie", "Chloe", "Charlotte", "Connor", "Cameron", "Conor", "Caitlin", "Cara"];
+
         res.render('employee', {
             title: name,
             layouts: 'main',
+            helpers: {
+                filter() {
+                    if(req.body.compSelect == "a"){
+                        return "A"
+                    } else if (req.body.compSelect == "b"){
+                        return "B"
+                    } else if (req.body.compSelect == "c"){
+                        return "C"
+                    } 
+                }
+            }
         });
     } else if (req.params.group == "transporter") {
         name = "Transporter Addmission"
@@ -113,7 +128,6 @@ app.get('/add/:group', function (req, res) {
         });
     }
 });
-// })
 
 const PORT = process.env.PORT || 3011;
 
