@@ -25,132 +25,136 @@ app.use(bodyParser.json());
 
 app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 } }))
 
-// open({
-//     filename: './log_database.db',
-//     driver: sqlite3.Database
-// }).then(async function (db) {
+open({
+    filename: './log_database.db',
+    driver: sqlite3.Database
+}).then(async function (db) {
 
-//     // run migrations
+    await db.migrate();
+  
+    app.get('/', function (req, res) {
+        // res.render('login', {
+        //     title: 'BSA Login',
+        //     layouts: 'main',
+        // });     
+        res.redirect('/dashboard');
+    });
 
-//     // await db.migrate();
+    app.post('/', async function (req, res) {
+        let username = 'suda';
+        let password = 'test';
+        let type = 'super-user'
 
-//     // only setup the routes once the database connection has been established
+        // await db.all('SELECT * FROM customer_login WHERE Username = ? AND Pwd = ?', req.body.username, req.body.password)
+        //     .then(function (customer_login) {
+        //         if (customer_login.length != 0) {
+        //             username = customer_login[0].Username;
+        //             password = customer_login[0].Pwd;
+        //             req.session.Name = customer_login[0].Firstname + " " + customer_login[0].Lastname;
+        //             req.session.userName = username;
+        //         } else {
+        //             username = ' ';
+        //             password = ' ';
+        //         }
+        //     });
 
-app.get('/', function (req, res) {
-    // res.render('login', {
-    //     title: 'BSA Login',
-    //     layouts: 'main',
-    // });     
-    res.redirect('/group');
-});
-
-app.post('/', async function (req, res) {
-    let username = 'suda';
-    let password = 'test';
-
-    // await db.all('SELECT * FROM customer_login WHERE Username = ? AND Pwd = ?', req.body.username, req.body.password)
-    //     .then(function (customer_login) {
-    //         if (customer_login.length != 0) {
-    //             username = customer_login[0].Username;
-    //             password = customer_login[0].Pwd;
-    //             req.session.Name = customer_login[0].Firstname + " " + customer_login[0].Lastname;
-    //             req.session.userName = username;
-    //         } else {
-    //             username = ' ';
-    //             password = ' ';
-    //         }
-    //     });
-
-    if (username == req.body.username && password == req.body.password) {
-        req.session.loginMessage = "Logged In";
-        res.redirect('/group');
-    } else {
-        req.session.loginMessage = "Incorrect Username or Password";
-        res.redirect('/');
-    }
-
-
-});
-
-app.get('/group', function (req, res) {
-    res.render('group', {
-        title: 'BSA Group'
-    })
-})
-
-app.post('/group', function (req, res) {
-    if (req.body.group == "employee") {
-        console.log("Employee")
-        res.redirect("/add/employee")
-    } else if (req.body.group == "visitor") {
-        console.log("Visitor")
-        res.redirect("/add/visitor")
-    } else if (req.body.group == "transporter") {
-        console.log("Transporter")
-        res.redirect("/add/transporter")
-    }
-})
-
-app.get('/add/:group', function (req, res) {
-    let name = "";
-    if (req.params.group == "visitor") {
-        name = "Visitor Addmission"
-        res.render('visitor', {
-            title: name,
-            layouts: 'main',
-        });
-    } else if (req.params.group == "employee") {
-        name = "Employee Addmission";
-        let group = "";
-        if (!req.session.compSelect) {
-            group = "all";
+        if (username == req.body.username && password == req.body.password) {
+            req.session.loginMessage = "Logged In";
+            res.redirect('/group');
         } else {
-            group = req.session.compSelect;
+            req.session.loginMessage = "Incorrect Username or Password";
+            res.redirect('/');
         }
-        let aArr = ["Amelia", "Alfie", "Ava", "Archie", "Alexander", "Alice", "Amy", "Aaron"];
-        let bArr = ["Brooke", "Bobby", "Bella", "Ben", "Bethany", "Blake", "Beatrice", "Baby"];
-        let cArr = ["Charlie", "Chloe", "Charlotte", "Connor", "Cameron", "Conor", "Caitlin", "Cara"];
-        res.render('employee', {
-            title: name,
-            layouts: 'main',
-            compSelect: group,
-            helpers: {
-                groupSelector(alpha) {
-                    if (alpha == "all") {
-                        return [aArr,bArr,cArr]
-                    } else if (alpha == "bsa") {
-                        return bArr
-                    } else if (alpha == "indgro") {
-                        return cArr
-                    }
-                },
-                filter(arr, option) {
-                    var ret = "";
 
-                    for (var i = 0; i < arr.length; i++) {
-                        ret = ret + option.fn(arr[i]);
-                    }
 
-                    return ret;
-                }
+    });
+
+    app.get('/group', function (req, res) {
+        res.render('group', {
+            title: 'BSA Group'
+        })
+    })
+
+    app.post('/group', function (req, res) {
+        if (req.body.group == "employee") {
+            res.redirect("/add/employee")
+        } else if (req.body.group == "visitor") {
+            res.redirect("/add/visitor")
+        } else if (req.body.group == "transporter") {
+            res.redirect("/add/transporter")
+        }
+    })
+
+    app.get('/add/:group', function (req, res) {
+        let name = "";
+        if (req.params.group == "visitor") {
+            name = "Visitor Addmission"
+            res.render('visitor', {
+                title: name,
+                layouts: 'main',
+            });
+        } else if (req.params.group == "employee") {
+            name = "Employee Addmission";
+            let group = "";
+            if (!req.session.compSelect) {
+                group = "all";
+            } else {
+                group = req.session.compSelect;
             }
-        });
-    } else if (req.params.group == "transporter") {
-        name = "Transporter Addmission";
-        res.render('transport', {
-            title: name,
-            layouts: 'main',
-        });
-    }
-});
+            let aArr = ["Amelia", "Alfie", "Ava", "Archie", "Alexander", "Alice", "Amy", "Aaron"];
+            let bArr = ["Brooke", "Bobby", "Bella", "Ben", "Bethany", "Blake", "Beatrice", "Baby"];
+            let cArr = ["Charlie", "Chloe", "Charlotte", "Connor", "Cameron", "Conor", "Caitlin", "Cara"];
+            res.render('employee', {
+                title: name,
+                layouts: 'main',
+                compSelect: group,
+                helpers: {
+                    groupSelector(alpha) {
+                        if (alpha == "all") {
+                            return [aArr, bArr, cArr]
+                        } else if (alpha == "bsa") {
+                            return bArr
+                        } else if (alpha == "indgro") {
+                            return cArr
+                        }
+                    },
+                    filter(arr, option) {
+                        var ret = "";
 
-app.post('/employee', function (req, res) {
-    req.session.compSelect = req.body.compSelect;
-    res.redirect('/add/employee');
+                        for (var i = 0; i < arr.length; i++) {
+                            ret = ret + option.fn(arr[i]);
+                        }
+
+                        return ret;
+                    }
+                }
+            });
+        } else if (req.params.group == "transporter") {
+            name = "Transporter Addmission";
+            res.render('transport', {
+                title: name,
+                layouts: 'main',
+            });
+        }
+    });
+
+    app.post('/employee', function (req, res) {
+        req.session.compSelect = req.body.compSelect;
+        res.redirect('/add/employee');
+    });
+
+    app.post('/addmission',function(req,res){
+
+    });
+    
+    app.post('/transporter',function(req,res){
+
+    });
+
 });
 
 const PORT = process.env.PORT || 3011;
 
 app.listen(PORT, function () {
     console.log('App started at port:' + PORT);
-})
+});
