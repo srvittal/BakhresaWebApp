@@ -100,33 +100,53 @@ app.get('/add/:group', function (req, res) {
             layouts: 'main',
         });
     } else if (req.params.group == "employee") {
-        name = "Employee Addmission"
+        name = "Employee Addmission";
+        let group = "";
+        if (!req.session.compSelect) {
+            group = "all";
+        } else {
+            group = req.session.compSelect;
+        }
         let aArr = ["Amelia", "Alfie", "Ava", "Archie", "Alexander", "Alice", "Amy", "Aaron"];
         let bArr = ["Brooke", "Bobby", "Bella", "Ben", "Bethany", "Blake", "Beatrice", "Baby"];
         let cArr = ["Charlie", "Chloe", "Charlotte", "Connor", "Cameron", "Conor", "Caitlin", "Cara"];
-
         res.render('employee', {
             title: name,
             layouts: 'main',
+            compSelect: group,
             helpers: {
-                filter() {
-                    if(req.body.compSelect == "a"){
-                        return "A"
-                    } else if (req.body.compSelect == "b"){
-                        return "B"
-                    } else if (req.body.compSelect == "c"){
-                        return "C"
-                    } 
+                groupSelector(alpha) {
+                    if (alpha == "all") {
+                        return [aArr,bArr,cArr]
+                    } else if (alpha == "bsa") {
+                        return bArr
+                    } else if (alpha == "indgro") {
+                        return cArr
+                    }
+                },
+                filter(arr, option) {
+                    var ret = "";
+
+                    for (var i = 0; i < arr.length; i++) {
+                        ret = ret + option.fn(arr[i]);
+                    }
+
+                    return ret;
                 }
             }
         });
     } else if (req.params.group == "transporter") {
-        name = "Transporter Addmission"
+        name = "Transporter Addmission";
         res.render('transport', {
             title: name,
             layouts: 'main',
         });
     }
+});
+
+app.post('/employee', function (req, res) {
+    req.session.compSelect = req.body.compSelect;
+    res.redirect('/add/employee');
 });
 
 const PORT = process.env.PORT || 3011;
