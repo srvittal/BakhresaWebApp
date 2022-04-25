@@ -6,9 +6,10 @@ const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
 const path = require('path');
 const moment = require('moment');
+const test = require('./test');
 
 const app = express();
-
+const testApp = test();
 var hbs = exphbs.create({
     layoutsDir: './views/layouts',
     helpers: {}
@@ -31,13 +32,13 @@ open({
 }).then(async function (db) {
 
     await db.migrate();
-  
+
     app.get('/', function (req, res) {
         // res.render('login', {
         //     title: 'BSA Login',
         //     layouts: 'main',
         // });     
-        res.redirect('/dashboard');
+        res.redirect('/group');
     });
 
     app.post('/', async function (req, res) {
@@ -57,7 +58,6 @@ open({
         //             password = ' ';
         //         }
         //     });
-
         if (username == req.body.username && password == req.body.password) {
             req.session.loginMessage = "Logged In";
             res.redirect('/group');
@@ -143,11 +143,11 @@ open({
         res.redirect('/add/employee');
     });
 
-    app.post('/addmission',function(req,res){
+    app.post('/addmission', function (req, res) {
 
     });
-    
-    app.post('/transporter',function(req,res){
+
+    app.post('/transporter', function (req, res) {
 
     });
 

@@ -1,4 +1,4 @@
-//const cartFF = require('./factoryFunction');
+const authFF = require('./test');
 
 module.exports = function userFunction() {
     const session = {};
@@ -6,7 +6,7 @@ module.exports = function userFunction() {
     function getFunction(id){
      
         if(!session[id]){
-            session[id] = cartFF();
+            session[id] = authFF();
             return session[id];
         } else {
             return session[id];
