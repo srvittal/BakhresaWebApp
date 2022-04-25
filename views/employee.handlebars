@@ -1,29 +1,37 @@
-<div class="d-grid gap-2 col-6 mt-2 mx-auto">
+<form action="/employee" method="post">
+    <div class="d-grid gap-2 col-6 mt-2 mx-auto">
         <label class="form-check-label" for="company">
-            Alpha
+            Select to filter
         </label>
         <div id="company">
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="compSelect" value="a" id="A">
+                <input class="form-check-input" type="radio" name="compSelect" value="all" id="A">
                 <label class="form-check-label" for="A">
-                    A
+                    All
                 </label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="compSelect" value="b" id="B">
+                <input class="form-check-input" type="radio" name="compSelect" value="bsa" id="BSA">
                 <label class="form-check-label" for="B">
-                    B
+                    Bakhresa SA PTY (LTD)
                 </label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="compSelect" value="c" id="C">
+                <input class="form-check-input" type="radio" name="compSelect" value="indgro" id="Indgro">
                 <label class="form-check-label" for="C">
-                    C
+                    Indgro Multi Services Group
                 </label>
+            </div>
+            <div class="text-center d-inline">
+                <button class="btn btn-primary" name="login" value="Login" on type="submit">Filter</button>
             </div>
         </div>
-    </div>
 
-<ul class="">
-  <li>{{filter}}</li>
- </ul>
+    </div>
+</form>
+
+<div class="col-6 gap-2 mx-auto">
+    {{#filter (groupSelector compSelect)}}
+    <div class="text-center d-inline"><button type="button" class="btn btn-link">{{this}}</button></div>
+    {{/filter}}
+</div>
