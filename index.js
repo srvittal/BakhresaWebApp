@@ -34,17 +34,17 @@ open({
     await db.migrate();
 
     app.get('/', function (req, res) {
-        // res.render('login', {
-        //     title: 'BSA Login',
-        //     layouts: 'main',
-        // });     
-        res.redirect('/group');
+        res.render('login', {
+            title: 'BSA Login',
+            layouts: 'main',
+        });     
+        //res.redirect('/group');
     });
 
     app.post('/', async function (req, res) {
         let username = 'suda';
         let password = 'test';
-        let type = 'super-user'
+        let type = 'admin'
 
         // await db.all('SELECT * FROM customer_login WHERE Username = ? AND Pwd = ?', req.body.username, req.body.password)
         //     .then(function (customer_login) {
@@ -59,8 +59,25 @@ open({
         //         }
         //     });
         if (username == req.body.username && password == req.body.password) {
+            if(type == 'super-user'){
+                res.render('group', {
+                    title: 'Superuser',
+                    layouts: 'main'
+                })
+            } else if(type == 'admin'){
+                // res.render('adminDashboard', {
+                //     title: 'Dashboard',
+                //     layouts: 'main'
+                // })
+                res.send("This is the admin dashboard")
+            } else if(type == 'user'){
+                // res.render('userDashboard', {
+                //     title: 'Dashboard',
+                //     layouts: 'main'
+                // })
+                res.send("This is the user dashboard")
+            }
             req.session.loginMessage = "Logged In";
-            res.redirect('/group');
         } else {
             req.session.loginMessage = "Incorrect Username or Password";
             res.redirect('/');
@@ -71,7 +88,8 @@ open({
 
     app.get('/group', function (req, res) {
         res.render('group', {
-            title: 'BSA Group'
+            title: 'BSA Group',
+            layouts: 'main'
         })
     })
 
