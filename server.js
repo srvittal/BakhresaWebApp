@@ -12,6 +12,13 @@ const moment = require('moment');
 const Database = require('./database');
 const DB = Database();
 
+try {
+    DB.addUser('super-user','sudarshan','BSA@123789');
+    DB.addUser('admin','admin','BSA@123456')
+} catch (error) {
+    console.log(error);
+}
+
 // configure passport.js to use the local strategy
 passport.use(new LocalStrategy(
     function (username, password, done) {
@@ -87,6 +94,7 @@ app.post('/', function (req, res, next) {
             if (!user) { return res.redirect('/'); }
             req.login(user, function (err) {
                 if (err) { return next(err); }
+                req.session.AccType = user.AccType;
                 if (user.AccType == 'super-user') {
                     res.render('group', {
                         title: 'Superuser',
@@ -111,10 +119,14 @@ app.post('/', function (req, res, next) {
 
 
 app.get('/group', function (req, res) {
-    res.render('group', {
-        title: 'BSA Group',
-        layouts: 'main'
-    })
+    if(req.isAuthenticated() == true){
+        res.render('group', {
+            title: 'BSA Group',
+            layouts: 'main'
+        })
+    } else {
+        res.redirect("/");
+    }
 })
 
 app.post('/group', function (req, res) {
@@ -186,8 +198,25 @@ app.post('/employee', function (req, res) {
 });
 
 app.post('/addmission', function (req, res) {
-
+    let data = {
+        id: uuid().toString(),
+        DateOfEntry: moment().format("DD-MM-YY"),
+        TimeOfEntry: moment().format('hh:mm:ss A'),
+        NameInfo: req.body.name,
+        VehicleReg: req.body.vehicleReg,
+        AddGroup: "Visitor"
+    }
+    DB.addVehicle(data);
+    res.redirect('/userDash')
 });
+
+app.get('/userDash',function(req,res){
+    res.render('userDashboard', {
+        title: "List",
+        layouts: 'main',
+        vehicle: DB.fetchData()
+    });
+})
 
 app.post('/transporter', function (req, res) {
 
