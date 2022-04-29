@@ -40,8 +40,6 @@ passport.deserializeUser(function (user, cb) {
     });
 });
 
-
-
 const app = express();
 
 var hbs = exphbs.create({
@@ -59,7 +57,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(session({
-    genid: function (req) {
+    genid: function () {
         return uuid()
     },
     store: new FileStore(),
