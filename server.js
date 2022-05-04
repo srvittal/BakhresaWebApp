@@ -13,8 +13,8 @@ const Database = require('./database');
 const DB = Database();
 
 try {
-    DB.addUser('super-user','sudarshan','BSA@123789');
-    DB.addUser('admin','admin','BSA@123456')
+    DB.addUser('super-user', 'sudarshan', 'BSA@123789');
+    DB.addUser('admin', 'admin', 'BSA@123456')
 } catch (error) {
     console.log(error);
 }
@@ -80,11 +80,11 @@ app.use(passport.session());
 
 
 app.get('/', function (req, res) {
-    res.render('login', {
-        title: 'BSA Login',
-        layouts: 'main',
-    });
-    //res.redirect('/group');
+    // res.render('login', {
+    //     title: 'BSA Login',
+    //     layouts: 'main',
+    // });
+    res.redirect('/group');
 });
 
 app.post('/', function (req, res, next) {
@@ -119,14 +119,18 @@ app.post('/', function (req, res, next) {
 
 
 app.get('/group', function (req, res) {
-    if(req.isAuthenticated() == true){
-        res.render('group', {
-            title: 'BSA Group',
-            layouts: 'main'
-        })
-    } else {
-        res.redirect("/");
-    }
+    // if(req.isAuthenticated() == true){
+    //     res.render('group', {
+    //         title: 'BSA Group',
+    //         layouts: 'main'
+    //     })
+    // } else {
+    //     res.redirect("/");
+    // }
+    res.render('group', {
+        title: 'BSA Group',
+        layouts: 'main'
+    })
 })
 
 app.post('/group', function (req, res) {
@@ -210,12 +214,22 @@ app.post('/addmission', function (req, res) {
     res.redirect('/userDash')
 });
 
-app.get('/userDash',function(req,res){
-    res.render('userDashboard', {
-        title: "List",
-        layouts: 'main',
-        vehicle: DB.fetchData()
+app.get('/userDash', function (req, res) {
+    let data = DB.fetchData();
+    let list = data.map(
+        function (item) {
+        return { 
+            name: item.NameInfo, 
+            date: item.DateOfEntry,
+            time: item.TimeOfEntry,
+            reg: item.VehicleReg 
+        }
     });
+res.render('userDashboard', {
+    title: "List",
+    layouts: 'main',
+    vehicle: list
+});
 })
 
 app.post('/transporter', function (req, res) {
