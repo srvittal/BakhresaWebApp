@@ -32,8 +32,34 @@
     </div>
 </form>
 
-<div class="col-6 gap-2 mx-auto">
-    {{#filter (groupSelector compSelect)}}
-    <div class="text-center d-inline"><button type="button" class="btn btn-link">{{this}}</button></div>
-    {{/filter}}
+<div class="col-6 my-2 mx-auto">
+    <div class="d-inline-block"><i class="fa-solid fa-magnifying-glass"></i></div>
+    <div class="d-inline-block"><input class="form-control" type="text" id="searchBar" placeholder="Search for name"></div>
 </div>
+
+{{!-- <div class="col-6 gap-2 mx-auto">
+    <ul id="nameList" class='{{groupClass}}'>
+        {{#filter (groupSelector compSelect)}}
+        <li><a href="employee/{{this}}">{{this}}</a></li>
+        {{/filter}}
+    </ul>
+</div> --}}
+
+<div class="col-6 gap-2 mx-auto">
+    <div id="nameList" class="d-flex flex-wrap btn-group" role="group">
+        {{#filter (groupSelector compSelect)}}
+            <a href="employee/{{this}}" class="btn btn-primary col-2 m-1">{{this}}</a>
+        {{/filter}}
+    </div>
+</div>
+
+<script type="text/javascript" src="/public/search.js"></script>
+
+
+
+{{!-- let numberArray = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+let b = 0;
+let c = 0;
+
+for(let i = 0; i < numberArray.length/5; i++){ let arr=[]; for(let z=b; z < b+5; z++){ arr.push(numberArray[z]); c++ }
+    b=c; console.log(arr) } --}}
