@@ -166,23 +166,23 @@ app.get('/add/:group', function (req, res) {
             title: name,
             layouts: 'main',
             compSelect: group,
+            groupClass: group,
             helpers: {
                 groupSelector(alpha) {
                     if (alpha == "all") {
-                        return [aArr, bArr, cArr]
+                        return aArr.concat(bArr, cArr);
                     } else if (alpha == "bsa") {
-                        return bArr
+                        return bArr;
                     } else if (alpha == "indgro") {
-                        return cArr
+                        return cArr;
                     }
                 },
                 filter(arr, option) {
-                    var ret = "";
+                    let ret = "";
 
-                    for (var i = 0; i < arr.length; i++) {
+                    for (let i = 0; i < arr.length; i++) {
                         ret = ret + option.fn(arr[i]);
                     }
-
                     return ret;
                 }
             }
@@ -198,6 +198,11 @@ app.get('/add/:group', function (req, res) {
 
 app.post('/employee', function (req, res) {
     req.session.compSelect = req.body.compSelect;
+    res.redirect('/add/employee');
+});
+
+app.get('/add/employee/:name', function (req, res) {
+    console.log(req.params.name);
     res.redirect('/add/employee');
 });
 
@@ -218,18 +223,18 @@ app.get('/userDash', function (req, res) {
     let data = DB.fetchData();
     let list = data.map(
         function (item) {
-        return { 
-            name: item.NameInfo, 
-            date: item.DateOfEntry,
-            time: item.TimeOfEntry,
-            reg: item.VehicleReg 
-        }
+            return {
+                name: item.NameInfo,
+                date: item.DateOfEntry,
+                time: item.TimeOfEntry,
+                reg: item.VehicleReg
+            }
+        });
+    res.render('userDashboard', {
+        title: "List",
+        layouts: 'main',
+        vehicle: list
     });
-res.render('userDashboard', {
-    title: "List",
-    layouts: 'main',
-    vehicle: list
-});
 })
 
 app.post('/transporter', function (req, res) {
