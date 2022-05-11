@@ -316,7 +316,23 @@ app.get('/userDash', function (req, res) {
 })
 
 app.post('/transporter', function (req, res) {
-
+    let group;
+    if(req.body.type == 'other'){
+        group = req.body.purpose;
+    } else {
+        group = req.body.type;
+    };
+    let data = {
+        id: uuid().toString(),
+        DateOfEntry: moment().format("DD-MM-YY"),
+        TimeOfEntry: moment().format('hh:mm:ss A'),
+        NameInfo: req.body.name,
+        VehicleReg: req.body.vehicleReg,
+        VehicleType: 'Truck',
+        AddGroup: group
+    }
+    DB.addVehicle(data);
+    res.redirect('/userDash')
 });
 
 
