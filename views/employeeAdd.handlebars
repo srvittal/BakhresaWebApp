@@ -1,11 +1,14 @@
-<form action="/empAdd" method="post">  
+<form action="/empAdd" method="post">
     <div class="d-grid gap-2 col-6 mt-5 mx-auto">
         <b>Date: <span id="date"> </span></b>
         <b>Time: <span id="time"> </span></b>
         <script type="text/javascript" src="/public/time.js"></script>
     </div>
     <div class="d-grid gap-2 col-6 mt-2 mx-auto">
-        <input type="text" class="form-control text-center" name="name" value="{{name}}" placeholder="Visitor Name">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control text-center" name="name" value="{{name}}" placeholder="Employee Name">
+            <span class="input-group-text" id="basic-addon2">{{comp}}</span>
+        </div>
         <input type="text" class="form-control text-center" name="vehicleReg" value="{{reg}}"
             placeholder="Vehicle Registration">
     </div>
