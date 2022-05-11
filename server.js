@@ -267,6 +267,7 @@ app.get('/add/employee/:comp/:name', function (req, res) {
         layouts: 'main',
         name: empData[0].NameInfo,
         reg: empData[0].VehicleReg,
+        comp: empData[0].CompanyGroup,
         data: empData[0].VehicleType,
         helpers: {
             selected(value, data) {
