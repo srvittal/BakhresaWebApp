@@ -213,6 +213,7 @@ app.post('/addmission', function (req, res) {
         TimeOfEntry: moment().format('hh:mm:ss A'),
         NameInfo: req.body.name,
         VehicleReg: req.body.vehicleReg,
+        VehicleType: req.body.type,
         AddGroup: "Visitor"
     }
     DB.addVehicle(data);
@@ -227,6 +228,7 @@ app.get('/userDash', function (req, res) {
                 name: item.NameInfo,
                 date: item.DateOfEntry,
                 time: item.TimeOfEntry,
+                type: item.VehicleType,
                 reg: item.VehicleReg
             }
         });
