@@ -162,6 +162,48 @@ app.get('/add/:group', function (req, res) {
         let aArr = ["Amelia", "Alfie", "Ava", "Archie", "Alexander", "Alice", "Amy", "Aaron"];
         let bArr = ["Brooke", "Bobby", "Bella", "Ben", "Bethany", "Blake", "Beatrice", "Baby"];
         let cArr = ["Charlie", "Chloe", "Charlotte", "Connor", "Cameron", "Conor", "Caitlin", "Cara"];
+
+        let BSA = [
+            {
+                CompanyGroup: 'BSA',
+                NameInfo: 'EMP 1 - BSA',
+                VehicleReg: '123',
+                VehicleType: 'Car'
+            },
+            {
+                CompanyGroup: 'BSA',
+                NameInfo: 'EMP 2 - BSA',
+                VehicleReg: '456',
+                VehicleType: 'Van'
+            },
+            {
+                CompanyGroup: 'BSA',
+                NameInfo: 'EMP 3 - BSA',
+                VehicleReg: '789',
+                VehicleType: 'Car'
+            }
+        ];
+        let indgro = [
+            {
+                CompanyGroup: 'BSA',
+                NameInfo: 'INDGRO EMP 001',
+                VehicleReg: '147',
+                VehicleType: 'Van'
+            },
+            {
+                CompanyGroup: 'BSA',
+                NameInfo: 'INDGRO EMP 002',
+                VehicleReg: '258',
+                VehicleType: 'Car'
+            },
+            {
+                CompanyGroup: 'BSA',
+                NameInfo: 'INDGRO EMP 003',
+                VehicleReg: '369',
+                VehicleType: ''
+            }
+        ];
+
         res.render('employee', {
             title: name,
             layouts: 'main',
@@ -169,12 +211,19 @@ app.get('/add/:group', function (req, res) {
             groupClass: group,
             helpers: {
                 groupSelector(alpha) {
+                    // if (alpha == "all") {
+                    //     return aArr.concat(bArr, cArr);
+                    // } else if (alpha == "bsa") {
+                    //     return bArr;
+                    // } else if (alpha == "indgro") {
+                    //     return cArr;
+                    // }
                     if (alpha == "all") {
-                        return aArr.concat(bArr, cArr);
+                        return BSA.concat(indgro);
                     } else if (alpha == "bsa") {
-                        return bArr;
+                        return BSA;
                     } else if (alpha == "indgro") {
-                        return cArr;
+                        return indgro;
                     }
                 },
                 filter(arr, option) {
@@ -196,16 +245,6 @@ app.get('/add/:group', function (req, res) {
     }
 });
 
-app.post('/employee', function (req, res) {
-    req.session.compSelect = req.body.compSelect;
-    res.redirect('/add/employee');
-});
-
-app.get('/add/employee/:name', function (req, res) {
-    console.log(req.params.name);
-    res.redirect('/add/employee');
-});
-
 app.post('/addmission', function (req, res) {
     let data = {
         id: uuid().toString(),
@@ -215,6 +254,44 @@ app.post('/addmission', function (req, res) {
         VehicleReg: req.body.vehicleReg,
         VehicleType: req.body.type,
         AddGroup: "Visitor"
+    }
+    DB.addVehicle(data);
+    res.redirect('/userDash')
+});
+
+app.post('/emp', function (req, res) {
+    req.session.compSelect = req.body.compSelect;
+    res.redirect('/add/employee');
+});
+
+app.get('/add/employee/:comp/:name', function (req, res) {
+    res.render('employeeAdd', {
+        title: 'Employee Addmission',
+        layouts: 'main',
+        name: req.params.name,
+        reg: 'ND403638',
+        data: 'Van',
+        helpers: {
+            selected(value, data) {
+                if (value == data) {
+                    return 'checked'
+                } else {
+                    return ''
+                }
+            }
+        }
+    })
+});
+
+app.post('/empAdd', function (req, res) {
+    let data = {
+        id: uuid().toString(),
+        DateOfEntry: moment().format("DD-MM-YY"),
+        TimeOfEntry: moment().format('hh:mm:ss A'),
+        NameInfo: req.body.name,
+        VehicleReg: req.body.vehicleReg,
+        VehicleType: req.body.type,
+        AddGroup: "Employee"
     }
     DB.addVehicle(data);
     res.redirect('/userDash')
