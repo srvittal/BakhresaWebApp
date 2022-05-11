@@ -1,4 +1,4 @@
-<form action="/employee" method="post">
+<form action="/emp" method="post">
     <div class="d-grid gap-2 col-6 mt-2 mx-auto">
         <label class="form-check-label" for="company">
             Select to filter
@@ -34,7 +34,8 @@
 
 <div class="col-6 my-2 mx-auto">
     <div class="d-inline-block"><i class="fa-solid fa-magnifying-glass"></i></div>
-    <div class="d-inline-block"><input class="form-control" type="text" id="searchBar" placeholder="Search for name"></div>
+    <div class="d-inline-block"><input class="form-control" type="text" id="searchBar" placeholder="Search for name">
+    </div>
 </div>
 
 {{!-- <div class="col-6 gap-2 mx-auto">
@@ -48,14 +49,12 @@
 <div class="col-6 gap-2 mx-auto">
     <div id="nameList" class="d-flex flex-wrap btn-group" role="group">
         {{#filter (groupSelector compSelect)}}
-            <a href="employee/{{this}}" class="btn btn-primary col-2 m-1">{{this}}</a>
+        <a href="employee/{{this.CompanyGroup}}/{{this.NameInfo}}" class="btn btn-primary col-2 m-1">{{this.NameInfo}}</a>
         {{/filter}}
     </div>
 </div>
 
 <script type="text/javascript" src="/public/search.js"></script>
-
-
 
 {{!-- let numberArray = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
 let b = 0;
