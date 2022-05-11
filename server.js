@@ -12,9 +12,54 @@ const moment = require('moment');
 const Database = require('./database');
 const DB = Database();
 
+let BSA0 = {
+    CompanyGroup: 'BSA',
+    NameInfo: 'EMP 1 - BSA',
+    VehicleReg: '123',
+    VehicleType: 'Car'
+}
+let BSA1 = {
+    CompanyGroup: 'BSA',
+    NameInfo: 'EMP 2 - BSA',
+    VehicleReg: '456',
+    VehicleType: 'Van'
+}
+let BSA2 = {
+    CompanyGroup: 'BSA',
+    NameInfo: 'EMP 3 - BSA',
+    VehicleReg: '789',
+    VehicleType: 'Car'
+}
+let indgro0 =
+{
+    CompanyGroup: 'Indgro',
+    NameInfo: 'INDGRO EMP 001',
+    VehicleReg: '147',
+    VehicleType: 'Van'
+}
+let indgro1 = {
+    CompanyGroup: 'Indgro',
+    NameInfo: 'INDGRO EMP 002',
+    VehicleReg: '258',
+    VehicleType: 'Car'
+}
+let indgro2 = {
+    CompanyGroup: 'Indgro',
+    NameInfo: 'INDGRO EMP 003',
+    VehicleReg: '369',
+    VehicleType: ''
+}
+
+
 try {
     DB.addUser('super-user', 'sudarshan', 'BSA@123789');
-    DB.addUser('admin', 'admin', 'BSA@123456')
+    DB.addUser('admin', 'admin', 'BSA@123456');
+    DB.employees('add', BSA0);
+    DB.employees('add', BSA1);
+    DB.employees('add', BSA2);
+    DB.employees('add', indgro0);
+    DB.employees('add', indgro1);
+    DB.employees('add', indgro2);
 } catch (error) {
     console.log(error);
 }
@@ -159,51 +204,9 @@ app.get('/add/:group', function (req, res) {
         } else {
             group = req.session.compSelect;
         }
-        let aArr = ["Amelia", "Alfie", "Ava", "Archie", "Alexander", "Alice", "Amy", "Aaron"];
-        let bArr = ["Brooke", "Bobby", "Bella", "Ben", "Bethany", "Blake", "Beatrice", "Baby"];
-        let cArr = ["Charlie", "Chloe", "Charlotte", "Connor", "Cameron", "Conor", "Caitlin", "Cara"];
 
-        let BSA = [
-            {
-                CompanyGroup: 'BSA',
-                NameInfo: 'EMP 1 - BSA',
-                VehicleReg: '123',
-                VehicleType: 'Car'
-            },
-            {
-                CompanyGroup: 'BSA',
-                NameInfo: 'EMP 2 - BSA',
-                VehicleReg: '456',
-                VehicleType: 'Van'
-            },
-            {
-                CompanyGroup: 'BSA',
-                NameInfo: 'EMP 3 - BSA',
-                VehicleReg: '789',
-                VehicleType: 'Car'
-            }
-        ];
-        let indgro = [
-            {
-                CompanyGroup: 'BSA',
-                NameInfo: 'INDGRO EMP 001',
-                VehicleReg: '147',
-                VehicleType: 'Van'
-            },
-            {
-                CompanyGroup: 'BSA',
-                NameInfo: 'INDGRO EMP 002',
-                VehicleReg: '258',
-                VehicleType: 'Car'
-            },
-            {
-                CompanyGroup: 'BSA',
-                NameInfo: 'INDGRO EMP 003',
-                VehicleReg: '369',
-                VehicleType: ''
-            }
-        ];
-
+        let BSA = DB.fetchEmp('BSA');
+        let Indgro = DB.fetchEmp('Indgro')
         res.render('employee', {
             title: name,
             layouts: 'main',
@@ -211,19 +214,12 @@ app.get('/add/:group', function (req, res) {
             groupClass: group,
             helpers: {
                 groupSelector(alpha) {
-                    // if (alpha == "all") {
-                    //     return aArr.concat(bArr, cArr);
-                    // } else if (alpha == "bsa") {
-                    //     return bArr;
-                    // } else if (alpha == "indgro") {
-                    //     return cArr;
-                    // }
                     if (alpha == "all") {
-                        return BSA.concat(indgro);
+                        return BSA.concat(Indgro);
                     } else if (alpha == "bsa") {
                         return BSA;
                     } else if (alpha == "indgro") {
-                        return indgro;
+                        return Indgro;
                     }
                 },
                 filter(arr, option) {
@@ -265,12 +261,13 @@ app.post('/emp', function (req, res) {
 });
 
 app.get('/add/employee/:comp/:name', function (req, res) {
+    let empData = DB.fetchEmp(req.params.comp,req.params.name);
     res.render('employeeAdd', {
         title: 'Employee Addmission',
         layouts: 'main',
-        name: req.params.name,
-        reg: 'ND403638',
-        data: 'Van',
+        name: empData[0].NameInfo,
+        reg: empData[0].VehicleReg,
+        data: empData[0].VehicleType,
         helpers: {
             selected(value, data) {
                 if (value == data) {
@@ -309,6 +306,7 @@ app.get('/userDash', function (req, res) {
                 reg: item.VehicleReg
             }
         });
+    console.log(list);
     res.render('userDashboard', {
         title: "List",
         layouts: 'main',
