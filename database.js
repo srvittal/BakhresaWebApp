@@ -9,7 +9,7 @@ const db = new Database('BSA.db');
 db.exec('CREATE TABLE if not exists user_login (id INTEGER PRIMARY KEY AUTOINCREMENT, AccType TEXT NOT NULL, Username TEXT NOT NULL,Pwd TEXT NOT NULL)');
 db.exec('CREATE TABLE if not exists vehicle_present (id TEXT PRIMARY KEY, DateOfEntry TEXT NOT NULL, TimeOfEntry TEXT NOT NULL, NameInfo TEXT NOT NULL, VehicleReg TEXT NOT NULL, VehicleType TEXT NOT NULL, AddGroup TEXT NOT NULL)');
 db.exec('CREATE TABLE if not exists vehicle_history (id TEXT PRIMARY KEY, DateOfEntry TEXT NOT NULL, TimeOfEntry TEXT NOT NULL, NameInfo TEXT NOT NULL, VehicleReg TEXT NOT NULL, VehicleType TEXT NOT NULL, AddGroup TEXT NOT NULL, DateOfExit TEXT , TimeOfExit TEXT )');
-db.exec('CREATE TABLE if not exists employeeList (id INTEGER PRIMARY KEY AUTOINCREMENT, CompanyGroup TEXT NOT NULL, NameInfo TEXT NOT NULL, VehicleReg TEXT NOT NULL)');
+db.exec('CREATE TABLE if not exists employeeList (id INTEGER PRIMARY KEY AUTOINCREMENT, CompanyGroup TEXT NOT NULL, NameInfo TEXT NOT NULL, VehicleReg TEXT NOT NULL, VehicleType TEXT NOT NULL)');
 
 module.exports = function dataBase() {
     function userExists(Username) {
@@ -76,15 +76,16 @@ module.exports = function dataBase() {
     };
 
     function employees(action, data, updateVar) {
-        const addEmp = db.prepare('INSERT INTO employeeList (CompanyGroup, NameInfo, VehicleReg) VALUES ($CompanyGroup,$NameInfo,$VehicleReg);');
+        const addEmp = db.prepare('INSERT INTO employeeList (CompanyGroup, NameInfo, VehicleReg, VehicleType) VALUES ($CompanyGroup,$NameInfo,$VehicleReg,$VehicleType);');
         const updateEmp = db.prepare('UPDATE employeeList SET' + updateVar + '= ? WHERE NameInfo = ?;');
         const deleteEmp = db.prepare('DELETE FROM employeeList WHERE CompanyGroup = ? AND NameInfo = ?;');
-
+      
         if (action == 'add') {
             addEmp.run({
                 CompanyGroup: data.CompanyGroup,
                 NameInfo: data.NameInfo,
-                VehicleReg: data.VehicleReg
+                VehicleReg: data.VehicleReg,
+                VehicleType: data.VehicleType
             });
         } else if (action == 'update') {
             updateEmp.run(data.updateVal, data.NameInfo)
@@ -96,7 +97,7 @@ module.exports = function dataBase() {
     function fetchData() {
         const Present = db.prepare('SELECT * FROM vehicle_present');
         let details = Present.all();
-
+        console.log(details);
         return details;
     };
 
